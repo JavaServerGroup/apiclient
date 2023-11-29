@@ -6,7 +6,7 @@
 
     <groupId>io.github.javaservergroup</groupId>
     <artifactId>apiclient</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Another http client</description>
