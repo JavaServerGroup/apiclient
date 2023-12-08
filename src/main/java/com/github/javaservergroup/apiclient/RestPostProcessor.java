@@ -1,8 +1,7 @@
-package com.github.javaservergroup.apiclient.processor;
+package com.github.javaservergroup.apiclient;
 
 import com.alibaba.fastjson2.JSON;
 import com.github.javaservergroup.apiclient.exception.RestPostNotSupportFileException;
-import com.github.javaservergroup.apiclient.model.Request;
 import com.github.javaservergroup.apiclient.util.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,9 +24,9 @@ public class RestPostProcessor extends AbstractProcessor {
 
     @Override
     void processingParam() {
-        checkIsNotPostFile(HttpUtil.obj2Map(request.getParam()));
-        if (request.getParam() != null) {
-            request.setParamsString(JSON.toJSONString(request.getParam()));
+        checkIsNotPostFile(HttpUtil.obj2Map(request.param));
+        if (request.param != null) {
+            request.paramsString = JSON.toJSONString(request.param);
         }
         request.header("Content-Type", "application/json");
     }
@@ -35,20 +34,15 @@ public class RestPostProcessor extends AbstractProcessor {
     @Override
     HttpURLConnection doProcess(HttpURLConnection httpUrlConnection) throws IOException {
         if (log.isDebugEnabled()) {
-            if (request.getParamsString() == null) {
-                log.debug("发送请求: curl '{}' {} -X POST",
-                        request.getUrl(),
-                        makeHeaderLogString(request.getHeader()));
+            if (request.paramsString == null || request.paramsString.isEmpty()) {
+                log.debug("发送请求: curl '{}' {}-X POST", request.url, makeHeaderLogString(request.header));
             } else {
-                log.debug("发送请求: curl '{}' {} -X POST -d '{}'",
-                        request.getUrl(),
-                        makeHeaderLogString(request.getHeader()),
-                        request.getParamsString());
+                log.debug("发送请求: curl '{}' {}-X POST -d '{}'", request.url, makeHeaderLogString(request.header), request.paramsString);
             }
         }
         httpUrlConnection.setDoOutput(true);
-        if (request.getParamsString() != null) {
-            byte[] data = request.getParamsString().getBytes(StandardCharsets.UTF_8);
+        if (request.paramsString != null) {
+            byte[] data = request.paramsString.getBytes(StandardCharsets.UTF_8);
             httpUrlConnection.setFixedLengthStreamingMode(data.length);
 
             writeAndCloseStream(httpUrlConnection.getOutputStream(), data);

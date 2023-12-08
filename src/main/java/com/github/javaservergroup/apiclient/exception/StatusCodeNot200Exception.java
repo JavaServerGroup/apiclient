@@ -1,7 +1,7 @@
 package com.github.javaservergroup.apiclient.exception;
 
 import com.alibaba.fastjson2.JSON;
-import com.github.javaservergroup.apiclient.model.Request;
+import com.github.javaservergroup.apiclient.Request;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;

@@ -105,6 +105,7 @@ public class ApiClientTest {
     public void getIoException() throws Exception {
         Api().get("http://www");
     }
+
     @Test
     public void postWithNoParamTest() throws Exception {
         //发送没参数的post请求
@@ -214,7 +215,7 @@ public class ApiClientTest {
         people.setHeight(1.73);
         people.setAvatar(new File("src/test/resources/media/g.gif"));
 
-        ResponsePeople responsePeople = Api().param(people).setReadTimeout(10000).filePost(host + "/sentPost?name=" + URLEncoder.encode("中文名", "UTF-8"), ResponsePeople.class);
+        ResponsePeople responsePeople = Api().param(people).readTimeout(10000).filePost(host + "/sentPost?name=" + URLEncoder.encode("中文名", "UTF-8"), ResponsePeople.class);
         assertEquals("中文名", responsePeople.getName());
         assertEquals(new Integer(30), responsePeople.getAge());
         assertEquals(new Double(1.73), responsePeople.getHeight());
@@ -393,9 +394,14 @@ public class ApiClientTest {
         ResponseWrapper responseWrapper = Api().getResponseWrapper(host + "/redirect");
         assertEquals(200, responseWrapper.getResponseCode());
 
-        responseWrapper = Api().setFollowRedirects(false).getResponseWrapper(host + "/redirect");
+        responseWrapper = Api().followRedirects(false).getResponseWrapper(host + "/redirect");
         assertEquals(302, responseWrapper.getResponseCode());
         assertEquals("http://www.baidu.com", responseWrapper.getResponseHeader().get("Location").get(0));
     }
+
+//    @Test
+//    public void googleTest() throws Exception {
+//        Api().get("https://www.google.com");
+//    }
 
 }

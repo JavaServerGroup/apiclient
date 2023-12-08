@@ -1,42 +1,54 @@
-package com.github.javaservergroup.apiclient.model;
+package com.github.javaservergroup.apiclient;
 
-import com.github.javaservergroup.apiclient.ApiClient;
 import com.github.javaservergroup.apiclient.exception.StatusCodeNot200Exception;
-import com.github.javaservergroup.apiclient.processor.*;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import com.github.javaservergroup.apiclient.model.ResponseWrapper;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Data
-@Accessors(chain = true)
 public class Request {
 
     // http请求的header
-    private Map<String, String> header = new HashMap<>();
+    Map<String, String> header = new HashMap<>();
 
     // http请求参数
-    private Object param;
+    Object param;
 
     // http请求的地址
-    private String url;
+    String url;
 
     // 默认使用全局超时时间配置
-    private int connectionTimeout = ApiClient.getDefaultConnectionTimeout();
+    int connectionTimeout = ApiClient.getDefaultConnectionTimeout();
 
     // 默认使用全局超时时间配置
-    private int readTimeout = ApiClient.getDefaultReadTimeout();
+    int readTimeout = ApiClient.getDefaultReadTimeout();
 
     // url上的请求字符串
-    private String paramsString;
+    String paramsString;
 
     // 是否跟随跳转
-    private boolean isFollowRedirects = true;
+    boolean isFollowRedirects = true;
+
+    // 添加代理http的host
+    String httpProxyHost;
+
+    // 添加代理http的port
+    Integer httpProxyPort;
 
     public Request() {
+    }
+
+    public Request followRedirects(boolean isFollowRedirects) {
+        this.isFollowRedirects = isFollowRedirects;
+        return this;
+    }
+
+    public Request httpProxy(String host, int port) {
+        this.httpProxyHost = host;
+        this.httpProxyPort = port;
+        return this;
     }
 
     public Request header(Map<String, String> header) {
@@ -49,7 +61,7 @@ public class Request {
         return this;
     }
 
-    public Request setConnectionTimeout(int connectionTimeout) {
+    public Request connectionTimeout(int connectionTimeout) {
         if (connectionTimeout < 1) {
             throw new IllegalArgumentException("超时时间必须大于0");
         }
@@ -57,7 +69,7 @@ public class Request {
         return this;
     }
 
-    public Request setReadTimeout(int readTimeout) {
+    public Request readTimeout(int readTimeout) {
         if (connectionTimeout < 1) {
             throw new IllegalArgumentException("超时时间必须大于0");
         }
@@ -139,5 +151,7 @@ public class Request {
         AbstractProcessor processor = new MultipartPostProcessor(this);
         return processor.process();
     }
+
+
 
 }

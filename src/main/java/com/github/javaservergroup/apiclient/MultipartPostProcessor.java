@@ -1,9 +1,8 @@
-package com.github.javaservergroup.apiclient.processor;
+package com.github.javaservergroup.apiclient;
 
 import com.github.javaservergroup.apiclient.model.MultipartFileItem;
 import com.github.javaservergroup.apiclient.model.MultipartItem;
 import com.github.javaservergroup.apiclient.model.MultipartTextItem;
-import com.github.javaservergroup.apiclient.model.Request;
 import com.github.javaservergroup.apiclient.util.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +33,7 @@ public class MultipartPostProcessor extends AbstractProcessor {
     @Override
     void processingParam() {
 
-        if (request.getParam() != null) {
+        if (request.param != null) {
 
             Map<String, Object> param = fixParamToMap();
 
@@ -59,13 +58,11 @@ public class MultipartPostProcessor extends AbstractProcessor {
     }
 
     private Map<String, Object> fixParamToMap() {
-        Map<String, Object> param;
-        if (request.getParam() instanceof Map) {
-            param = (Map) request.getParam();
+        if (request.param instanceof Map) {
+            return (Map) request.param;
         } else {
-            param = HttpUtil.obj2Map(request.getParam());
+            return HttpUtil.obj2Map(request.param);
         }
-        return param;
     }
 
     private MultipartItem genMultipartTextItem(String key, String value) {
@@ -113,13 +110,11 @@ public class MultipartPostProcessor extends AbstractProcessor {
     }
 
     private boolean allListItemIsFile(List list) {
-
         for (Object obj : list) {
             if (!(obj instanceof File)) {
                 return false;
             }
         }
-
         return true;
     }
 }

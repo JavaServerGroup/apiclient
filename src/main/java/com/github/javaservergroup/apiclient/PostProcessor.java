@@ -1,7 +1,5 @@
-package com.github.javaservergroup.apiclient.processor;
+package com.github.javaservergroup.apiclient;
 
-import com.github.javaservergroup.apiclient.ApiClient;
-import com.github.javaservergroup.apiclient.model.Request;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -18,18 +16,22 @@ public class PostProcessor extends AbstractProcessor {
 
     @Override
     void processingParam() {
-        request.setParamsString(params2paramsStr(request.getParam()));
+        request.paramsString = params2paramsStr(request.param);
     }
 
     @Override
     HttpURLConnection doProcess(HttpURLConnection httpUrlConnection) throws IOException {
         if (log.isDebugEnabled()) {
-            log.debug("发送请求: curl '{}' {} -X POST -d '{}'", request.getUrl(), makeHeaderLogString(request.getHeader()), request.getParamsString());
+            if (request.paramsString == null || request.paramsString.isEmpty()) {
+                log.debug("发送请求: curl '{}' {}-X POST", request.url, makeHeaderLogString(request.header));
+            } else {
+                log.debug("发送请求: curl '{}' {}-X POST -d '{}'", request.url, makeHeaderLogString(request.header), request.paramsString);
+            }
         }
         httpUrlConnection.setDoOutput(true);
-        if (!"".equals(request.getParamsString())) {
+        if (!"".equals(request.paramsString)) {
             httpUrlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-            byte[] data = request.getParamsString().getBytes(ApiClient.getCharsetName());
+            byte[] data = request.paramsString.getBytes(ApiClient.getCharsetName());
             httpUrlConnection.setFixedLengthStreamingMode(data.length);
 
             writeAndCloseStream(httpUrlConnection.getOutputStream(), data);

@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static com.github.javaservergroup.apiclient.processor.MultipartPostProcessor.LINE_END;
+import static com.github.javaservergroup.apiclient.MultipartPostProcessor.LINE_END;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**

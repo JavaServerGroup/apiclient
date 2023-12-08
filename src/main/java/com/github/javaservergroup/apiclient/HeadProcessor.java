@@ -1,7 +1,8 @@
-package com.github.javaservergroup.apiclient.processor;
+package com.github.javaservergroup.apiclient;
 
 import com.alibaba.fastjson2.JSON;
-import com.github.javaservergroup.apiclient.model.Request;
+import com.github.javaservergroup.apiclient.AbstractProcessor;
+import com.github.javaservergroup.apiclient.Request;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -24,15 +25,14 @@ public class HeadProcessor extends AbstractProcessor {
 
     @Override
     void processingParam() {
-        val url = appendParamStrToUrl(request.getUrl(), params2paramsStr(request.getParam()));
-        request.setUrl(url);
+        request.url = appendParamStrToUrl(request.url, params2paramsStr(request.param));
     }
 
     @Override
     HttpURLConnection doProcess(HttpURLConnection httpUrlConnection) {
         responseHeader = httpUrlConnection.getHeaderFields();
         if (log.isDebugEnabled()) {
-            log.debug("发送请求: curl -X HEAD {} '{}'", makeHeaderLogString(request.getHeader()), request.getUrl());
+            log.debug("发送请求: curl -X HEAD {} '{}'", makeHeaderLogString(request.header), request.url);
         }
         if (log.isDebugEnabled()) {
             log.debug("获得header: {}", JSON.toJSON(responseHeader));

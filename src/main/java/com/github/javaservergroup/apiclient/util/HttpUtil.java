@@ -99,7 +99,7 @@ public class HttpUtil {
         } else {
             StringBuilder headerStr = new StringBuilder();
             for (Map.Entry<String, String> entry : header.entrySet()) {
-                headerStr.append(" -H '");
+                headerStr.append("-H '");
                 headerStr.append(entry.getKey());
                 headerStr.append(": ");
                 headerStr.append(entry.getValue());
